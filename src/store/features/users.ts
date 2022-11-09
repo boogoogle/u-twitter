@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import type {RootState} from "./"
+import type {RootState} from ".."
 import {doLogin, doRegister} from 'mocks'
 import { User } from '@/types';
 
@@ -25,18 +25,27 @@ export const userSlice = createSlice ({
     }
 })
 
-
 export const actions = {
     ...userSlice.actions,
-    userLogin: createAsyncThunk('/user/doLogin', async (user:User) => {
+    userLogin: createAsyncThunk('/user/doLogin', async (user:User, {dispatch}) => {
         const res = await doLogin(user)
         console.log(res, "res1111")
-        return res.data
+        if(res.code === 200) {
+            dispatch(actions.updateUserInfo({
+                ...res.data,
+                isLogin: true
+            }as UserState))
+        }
     }),
-    userRegister: createAsyncThunk('/user/doRegister', async (user:User) => {
+    userRegister: createAsyncThunk('/user/doRegister', async (user:User, {dispatch, getState}) => {
         const res = await doRegister(user)
         console.log(res, "res22222")
-        return res.data
+        if(res.code === 200) {
+            dispatch(actions.updateUserInfo({
+                ...res.data,
+                isLogin: true
+            }as UserState))
+        }
     })
 }
 

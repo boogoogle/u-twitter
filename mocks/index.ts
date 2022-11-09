@@ -1,7 +1,11 @@
-import { User } from '../src/types'
+import { Twitter, User } from '../src/types'
 
 type UsersMap = {
   [key: string]: User
+}
+
+type TwittersMap = {
+  [key: string]: Twitter
 }
 
 type ResponseData<T> = T | undefined | null;
@@ -25,6 +29,16 @@ export function getUsersFromLocalStorage(){
 
   if(usersMap) {
     data = JSON.parse(usersMap)
+  }
+  return data;
+}
+
+export function getTwittersFromLocalStorage():TwittersMap{
+  const twitterssMap = window.localStorage.getItem('twittersMap')
+  let data:TwittersMap = {}
+
+  if(twitterssMap) {
+    data = JSON.parse(twitterssMap)
   }
   return data;
 }
@@ -54,4 +68,26 @@ export function doRegister(user: User): MockResponse<ResponseData<User>>{
     }
   }
   return new MockResponse(400, `register error, try later`, user )
+}
+
+
+export function getAllPostedTwitters():  MockResponse<ResponseData<TwittersMap>>{
+  try {
+    let twittersExist = getTwittersFromLocalStorage()
+    return new  MockResponse(200, `success`, twittersExist )
+  } catch (error) {
+    return new  MockResponse(400, `fetch all twitters failed: ${error}`, {} )
+  }
+}
+
+
+export function doPostAdd(post: Twitter):  MockResponse<ResponseData<Twitter>>{
+  try {
+    let twittersExist = getTwittersFromLocalStorage()
+    twittersExist[post.id] = post
+    window.localStorage.setItem("twittersMap", JSON.stringify(twittersExist))
+    return new  MockResponse(200, `success`, null )
+  } catch (error) {
+    return new  MockResponse(400, `post failed: ${error}`, post )
+  }
 }

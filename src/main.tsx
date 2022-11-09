@@ -14,11 +14,20 @@ import {
 } from "react-router-dom";
 
 import SignPage from "@/pages/Sign"
+import TimelinePage from "@/pages/Timeline"
 
 const router = createBrowserRouter([
   {
-    path: "/sign",
+    path: "/u/sign",
     element: <SignPage/>,
+  },
+  {
+    path: "/:username",
+    element: <TimelinePage/>,
+  },
+  {
+    path: "/tweet/:id",
+    element: <PostDetail/>,
   },
 ]);
 

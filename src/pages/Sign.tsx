@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { useForm, Resolver } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Form from 'react-bootstrap/Form';
+import { useNavigate } from "react-router-dom";
 
 import {
-  actions
-} from "@/store/slices"
+  actions,
+} from "@/store/features/users"
 import { User } from '@/types';
-import { AppDispatch } from '@/store';
+import { AppDispatch, RootState } from '@/store';
+import { useEffect } from 'react';
 
 
 type FormValues = {
@@ -34,6 +36,8 @@ const resolver: Resolver<FormValues> = async (values) => {
 }
 
 function Sign() {
+    const userInfo = useSelector((state:RootState) =>  state.userInfo)
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>()
 
     const [isShowRegister, setIsShowRegister] = useState(false)
@@ -54,6 +58,14 @@ function Sign() {
         setIsShowRegister(e.target.checked)
       }
     }
+
+    useEffect(()=>{
+      if(userInfo.isLogin) {
+        console.log(userInfo.username, "login successful", )
+        navigate(`/${userInfo.username}`)
+      }
+
+    }, [userInfo.username])
   
     return (
       <div className="container w-full flex-col justify-center min-h-screen bg-gray-50">
