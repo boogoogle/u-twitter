@@ -15,6 +15,7 @@ import {
 
 import SignPage from "@/pages/Sign"
 import TimelinePage from "@/pages/Timeline"
+import PostDetail from '@/pages/PostDetail';
 
 const router = createBrowserRouter([
   {

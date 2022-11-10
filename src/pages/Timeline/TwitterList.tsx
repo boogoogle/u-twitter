@@ -1,7 +1,5 @@
-import { RootState } from "@/store"
 import { Twitter } from "@/types"
 import { ListGroup, Stack, Card } from "react-bootstrap"
-import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 
 
@@ -13,7 +11,7 @@ interface ITwitterList{
     posts: Array<Twitter>
 }
 
-function TwitterItem({tw}:ITwitterItem){
+export function TwitterItem({tw}:ITwitterItem){
     const navigate = useNavigate();
 
     function toTwitterDetail(){

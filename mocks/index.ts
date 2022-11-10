@@ -1,3 +1,4 @@
+import { rejects } from 'assert'
 import { Twitter, User } from '../src/types'
 
 type UsersMap = {
@@ -19,6 +20,10 @@ class MockResponse<ResponseData> {
     this.code = code
     this.msg = msg
     this.data = data
+  }
+
+  factory(){
+    return Promise.resolve(this)
   }
 }
 
@@ -71,7 +76,7 @@ export function doRegister(user: User): MockResponse<ResponseData<User>>{
 }
 
 
-export function getAllPostedTwitters():  MockResponse<ResponseData<TwittersMap>>{
+export function doGetAllPostedTwitters():  MockResponse<ResponseData<TwittersMap>>{
   try {
     let twittersExist = getTwittersFromLocalStorage()
     return new  MockResponse(200, `success`, twittersExist )
@@ -90,4 +95,31 @@ export function doPostAdd(post: Twitter):  MockResponse<ResponseData<Twitter>>{
   } catch (error) {
     return new  MockResponse(400, `post failed: ${error}`, post )
   }
+}
+
+
+
+export function getPostDetail(id: number):  MockResponse<ResponseData<Twitter>>{
+  try {
+    let twittersExist = getTwittersFromLocalStorage()
+
+    if(twittersExist && twittersExist[id]) {
+      return new  MockResponse(200, `success`, twittersExist[id] as Twitter )
+    }
+    return new  MockResponse(400, `post[${id}] get failed`, null )
+
+  } catch (error) {
+    return new  MockResponse(400, `post failed: ${error}`, null )
+  }
+}
+
+export const doGetPostDetail = async (id:number): Promise<ResponseData<any>>=> {
+  return new Promise((resolve, reject) => {
+    try {
+      const res = getPostDetail(id)
+      resolve(res)
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
