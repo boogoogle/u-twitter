@@ -3,6 +3,7 @@ import { useForm, Resolver } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
+import { Alert, Card, Container, Stack } from 'react-bootstrap';
 
 import {
   actions,
@@ -10,6 +11,7 @@ import {
 import { User } from '@/types';
 import { AppDispatch, RootState } from '@/store';
 import { useEffect } from 'react';
+import {setCurrentUser} from "@/utils"
 
 
 type FormValues = {
@@ -44,7 +46,6 @@ function Sign() {
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({ resolver });
 
-
     const onSubmit = handleSubmit((user: User) => {
       if(isShowRegister) {
         dispatch(actions.userRegister(user));
@@ -59,48 +60,67 @@ function Sign() {
       }
     }
 
+    const clearAlertMsg = (v: boolean) => {
+      dispatch(actions.resetUserState({
+        msg: ""
+      }))
+    }
+
     useEffect(()=>{
       if(userInfo.isLogin) {
         console.log(userInfo.username, "login successful", )
+        setCurrentUser({
+          username: userInfo.username,
+          password: ''
+        })
         navigate(`/${userInfo.username}`)
       }
 
-    }, [userInfo.username])
+    }, [userInfo])
   
     return (
-      <div className="container w-full flex-col justify-center min-h-screen bg-gray-50">
-        <div className="max-w-md w-full mx-auto ">
-          <div className="text-center font-medium text-xl">Something</div>
-          <div className="text-3xl font-bold text-gray-900 mt-2 text-center">
-            SubTitle
-          </div>
-        </div>
-        <div className="max-w-md w-full mx-auto mt-4 p-8 bg-white border border-gray-300 rounded-sm">
-          <Form className="space-y-6 needs-validation was-validated">
-            <div>
-              <label htmlFor="" className="text-sm font-bold text-gray-300 flex flex-row items-center">
-                  Username {errors?.username && <div className="ml-2 text-red-500">{errors?.username.message}</div>}
-              </label>
-              <input type="text" {...register("username")} className='w-full p-2 border border-gray-300 rounded mt-1' />
+      <div style={{height: '100%'}} className="postion-relative">
+        {userInfo.msg? 
+          <Alert key={'danger'} variant="danger" className='position-absolute top-0 start-0 w-100'>
+            {userInfo.msg}
+          </Alert> : <></>
+        }
+        <div style={{height: '100%'}} className="d-flex flex-column container-sm justify-content-center align-items-center">
+          <Card className="p-4" style={{minWidth: "360px"}}>
+            <div className="d-flex flex-column align-items-center fs-2">
+              <div className="">U-Twitter</div>
+              <div className="">
+                Hello hooks
+              </div>
             </div>
+            <hr />
+            <Form className="space-y-6 needs-validation was-validated" onChange={()=>clearAlertMsg(false)}>
+              <div className='d-flex flex-column'>
+                <label htmlFor="" className='mb-2' >
+                    Username {errors?.username && <div className="d-inline-block ms-4 text-danger">{errors?.username.message}</div>}
+                </label>
+                <input type="text" {...register("username")} className='p-1 mt-1' />
+              </div>
 
-            <div>
-              <label htmlFor="" className="text-sm font-bold text-gray-300 flex flex-row items-center">
-                Password {errors?.password && <div className="ml-2 text-red-500">{errors?.password.message}</div>}
-              </label>
-              <input type="text" {...register("password")} className='w-full p-2 border border-gray-300 rounded mt-1' />
+              <div className='d-flex flex-column'>
+                <label htmlFor="" className="mr-2">
+                  Password {errors?.password && <div className="d-inline-block ms-4 text-danger">{errors?.password.message}</div>}
+                </label>
+                <input type="text" {...register("password")} className='p-1 mt-1' />
+              </div>
+
+              <Form.Check 
+                type="switch"
+                className='my-2'
+                id="custom-switch"
+                label={ `to ${isShowRegister ? 'login' : 'register'}`}
+                onClick={handleChangeMode}
+              />
+            <div className="row gx-5">
+                <button className={`btn btn-primary col mx-4`} onClick={onSubmit}>{isShowRegister ? "Register" : "Login" }</button>
             </div>
-
-            <Form.Check 
-              type="switch"
-              id="custom-switch"
-              label={ `to ${isShowRegister ? 'login' : 'register'}`}
-              onClick={handleChangeMode}
-            />
-           <div className="row gx-5">
-              <button className={`btn btn-primary col mx-4`} onClick={onSubmit}>{isShowRegister ? "Register" : "Login" }</button>
-           </div>
-          </Form>
+            </Form>
+          </Card>
         </div>
       </div>
     )

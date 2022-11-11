@@ -16,19 +16,26 @@ import {
 import SignPage from "@/pages/Sign"
 import TimelinePage from "@/pages/Timeline"
 import PostDetail from '@/pages/PostDetail';
+import Home from './pages/Home';
 
 const router = createBrowserRouter([
   {
+    path: '/',
+    element: <Home />,
+    children: [
+      {
+        path: "/:username",
+        element: <TimelinePage/>,
+      },
+      {
+        path: "/tweet/:id",
+        element: <PostDetail/>,
+      },
+    ]
+  },
+  {
     path: "/u/sign",
     element: <SignPage/>,
-  },
-  {
-    path: "/:username",
-    element: <TimelinePage/>,
-  },
-  {
-    path: "/tweet/:id",
-    element: <PostDetail/>,
   },
 ]);
 

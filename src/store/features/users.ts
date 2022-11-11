@@ -2,56 +2,89 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 import type {RootState} from ".."
 import {doLogin, doRegister} from 'mocks'
 import { User } from '@/types';
+import {getCurrentUser} from "@/utils"
 
 
 interface UserState {
     username: string;
     password?: any;
     isLogin?: boolean;
+    notRegister?: boolean;
+    msg?: string;
 }
+
+
+const userLogin = createAsyncThunk('/user/doLogin', async (user:User, {dispatch}) => {
+    const res = await doLogin(user)
+    console.log(res, "res1111")
+    if(res.code === 200) {
+        return {
+            ...res.data,
+            isLogin: true
+        }
+    } else {
+        return {
+            ...res.data,
+            msg: res.msg,
+            notRegister: true
+        } as UserState
+    }
+})
+
+
+const userRegister = createAsyncThunk('/user/doRegister', async (user:User, {dispatch, getState}) => {
+    const res = await doRegister(user)
+    if(res.code === 200) {
+        return {
+            ...res.data,
+            isLogin: true
+        }
+    } else {
+        return {
+            ...res.data,
+            msg: res.msg
+        } as UserState
+    }
+})
 
 const initialState: UserState = {
     username: '',
-    isLogin: false
+    isLogin: false,
+    msg: ''
 }
 
 export const userSlice = createSlice ({
     name: 'User',
     initialState,
     reducers: {
-        updateUserInfo: (state, action: PayloadAction<UserState>) => {
+        resetUserState: (state, action)=>{
             Object.assign(state, action.payload)
-        } // action's name: User/updateUserInfo
+        },
+        fetchUserInfo: (state) => {
+            const userInLocal = getCurrentUser()
+            if(userInLocal && userInLocal.username) {
+                state.username = userInLocal.username
+                state.isLogin = true
+            }
+        }
+    },
+    extraReducers: builder => {
+        builder.addCase(userLogin.fulfilled, (state, action) => {
+            Object.assign(state, action.payload)
+        })
+        builder.addCase(userRegister.fulfilled, (state, action) => {
+            Object.assign(state, {
+                ...action.payload,
+                isLogin: true
+            })
+        })
     }
 })
 
 export const actions = {
     ...userSlice.actions,
-    userLogin: createAsyncThunk('/user/doLogin', async (user:User, {dispatch}) => {
-        const res = await doLogin(user)
-        console.log(res, "res1111")
-        if(res.code === 200) {
-            dispatch(actions.updateUserInfo({
-                ...res.data,
-                isLogin: true
-            }as UserState))
-        }
-    }),
-    userRegister: createAsyncThunk('/user/doRegister', async (user:User, {dispatch, getState}) => {
-        const res = await doRegister(user)
-        console.log(res, "res22222")
-        if(res.code === 200) {
-            dispatch(actions.updateUserInfo({
-                ...res.data,
-                isLogin: true
-            }as UserState))
-        }
-    })
+    userLogin,
+    userRegister
 }
-
-
-
-
-export const selectUserInfo = (state: RootState) => state.userInfo
 
 
