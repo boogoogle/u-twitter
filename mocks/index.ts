@@ -105,6 +105,32 @@ export function doPostAdd(post: Twitter):  MockResponse<ResponseData<Twitter>>{
 
 
 
+export function doPostEdit(post: Twitter):  MockResponse<ResponseData<Twitter>>{
+  try {
+    let twittersExist = getTwittersFromLocalStorage()
+    twittersExist[post.id] = post
+    window.localStorage.setItem("twittersMap", JSON.stringify(twittersExist))
+    return new  MockResponse(200, `success`, null )
+  } catch (error) {
+    return new  MockResponse(400, `post failed: ${error}`, post )
+  }
+}
+
+
+
+export function doPostDelete(id: number):  MockResponse<ResponseData<null>>{
+  try {
+    let twittersExist = getTwittersFromLocalStorage()
+    delete twittersExist[id]
+    window.localStorage.setItem("twittersMap", JSON.stringify(twittersExist))
+    return new  MockResponse(200, `success`, null )
+  } catch (error) {
+    return new  MockResponse(400, `post failed: ${error}`, null )
+  }
+}
+
+
+
 export function getPostDetail(id: number):  MockResponse<ResponseData<Twitter>>{
   try {
     let twittersExist = getTwittersFromLocalStorage()

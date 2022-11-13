@@ -9,6 +9,7 @@ export type Twitter = {
     content: string;
     author: string;
     timestamp: number;
+    updatedTimestamp: number
 }
   
 

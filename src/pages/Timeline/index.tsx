@@ -35,22 +35,15 @@ function Timeline() {
         }
         dispatch(actions.postAdd(t))
     }
-    const flag = useRef(false)
 
     const loadList = useCallback(()=>{
         dispatch(actions.postsFetch())
         console.log("....loadList")
     }, [dispatch])
 
-    // function lg(){
-    //     console.log("lg-------")
-    // }
-
     useEffect(()=>{
         loadList()
     },[])
-
-    console.log(11111)
     
     return(
         <Container className='d-flex flex-column' style={{height: '100%'}}>

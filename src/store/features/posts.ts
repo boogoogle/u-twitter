@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import type {RootState} from ".."
-import {doPostAdd, doGetAllPostedTwitters, doGetPostDetail} from 'mocks'
+import {doPostAdd, doGetAllPostedTwitters, doGetPostDetail, doPostDelete, doPostEdit} from 'mocks'
 import { Pagination, Twitter } from '@/types';
 
 
@@ -8,8 +7,9 @@ interface PostsState {
     posts: Array<Twitter>
     currendPost: Twitter,
     allPostCount: number,
-    pagination: Pagination
-    isLoading: boolean
+    pagination: Pagination,
+    isLoading: boolean,
+    
 }
 
 
@@ -26,6 +26,14 @@ const postsFetch = createAsyncThunk('/posts/fetch', async (_, {dispatch,getState
     const res = await doGetAllPostedTwitters()
 
     if(res.code===200) {
+        return res.data
+    }
+})
+
+
+const postEdit = createAsyncThunk('/posts/edit', async (post:Twitter, {dispatch}) => {
+    const res = await doPostEdit(post)
+    if(res.code === 200) {
         return res.data
     }
 })
@@ -76,8 +84,6 @@ export const postsSlice = createSlice ({
                 state.pagination.hasMore = false
             }
 
-            console.log("page range", currentIndex, nextIndex,state.pagination.hasMore)
-
             state.posts = all_twitters.slice(0, nextIndex)
             console.log(state.posts, "posts")
             state.allPostCount = all_twitters.length
@@ -96,6 +102,14 @@ export const actions = {
             dispatch(actions.postsFetch())
         }
     }),
+    postDelete: createAsyncThunk('/posts/delete', async (id: number, {dispatch}) => {
+        const res = await doPostDelete(id)
+        if(res.code === 200) {
+            await dispatch(actions.resetPagination())
+            dispatch(actions.postsFetch())
+        }
+    }),
+    postEdit,
     getPostDetailById,
     postsFetch
 }
