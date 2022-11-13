@@ -53,7 +53,12 @@ export function doLogin(user: User): MockResponse<ResponseData<User>>{
   const usersMapOld = getUsersFromLocalStorage()
   if(user && user.username) {
     if(usersMapOld[user.username]) {
-      return new MockResponse(200, `${user.username} login success`, user )
+      const _u = usersMapOld[user.username]
+      if(_u.password === user.password) {
+        return new MockResponse(200, `${user.username} login success`, user )
+      } else {
+        return new MockResponse(400, `invalid password for ${user.username} !!`, user )
+      }
     } 
     return new MockResponse(400, `${user.username} has not registed`, user )
 

@@ -28,8 +28,8 @@ export function TwitterItem({tw}:ITwitterItem){
 
             <Card onClick={toTwitterDetail} className="mb-2">
                 <Card.Body>
-                    <Card.Title>{tw.id}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{(new Date(tw.timestamp).toUTCString())}</Card.Subtitle>
+                    <Card.Title>{tw.author}</Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">{tw.timestamp}</Card.Subtitle>
                     {
                         tw.author === userInfo.username && 
                         <>

@@ -42,12 +42,12 @@ function Timeline() {
         console.log("....loadList")
     }, [dispatch])
 
-    useEffect(()=>{
-        if(!flag.current){
-    console.log(22222)
+    // function lg(){
+    //     console.log("lg-------")
+    // }
 
-            loadList()
-        }
+    useEffect(()=>{
+        loadList()
     },[])
 
     console.log(11111)

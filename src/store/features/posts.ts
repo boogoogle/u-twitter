@@ -38,7 +38,7 @@ const initialState: PostsState = {
     pagination: {
         allItemsCount: 0,
         currentPage: 0,
-        size: 5,
+        size: 9,
         hasMore: true,
     }
 }
@@ -50,6 +50,7 @@ export const postsSlice = createSlice ({
         resetPagination(state){
             state.pagination.currentPage = 0
             state.pagination.hasMore = true
+            state.posts.length = 0
         },
     },
     extraReducers: builder => { 
@@ -91,7 +92,7 @@ export const actions = {
     postAdd: createAsyncThunk('/posts/add', async (post:Twitter, {dispatch}) => {
         const res = await doPostAdd(post)
         if(res.code === 200) {
-            dispatch(actions.resetPagination())
+            await dispatch(actions.resetPagination())
             dispatch(actions.postsFetch())
         }
     }),
