@@ -11,4 +11,12 @@ export type Twitter = {
     timestamp: number;
 }
   
+
+
+export type Pagination = {
+    allItemsCount: number,
+    currentPage: number,
+    size: number,
+    hasMore: boolean
+}
   

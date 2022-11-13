@@ -15,10 +15,12 @@ function Home() {
     }, [])
     
     return (
-        <div>
+        <>
             <UNavbar />
-            <Outlet />
-        </div>
+            <div style={{flex: 1, overflow: 'scroll'}}>
+              <Outlet/>
+            </div>
+        </>
     )
 }
 

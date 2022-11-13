@@ -10,7 +10,6 @@ import './index.css'
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
 } from "react-router-dom";
 
 import SignPage from "@/pages/Sign"
@@ -40,9 +39,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <Provider store={store}>
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+          <RouterProvider router={router} />
+      </Provider>
     </React.StrictMode>
-  </Provider>
 )

@@ -1,12 +1,12 @@
 import { Button, Navbar, Nav, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import {
   actions,
 } from "@/store/features/users"
 import { setCurrentUser } from '@/utils';
+
 
 function UNavbar() {
   const user = useSelector((state:RootState) =>  state.userInfo)
@@ -23,7 +23,7 @@ function UNavbar() {
   }
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" style={{flex: 'none'}}>
       <Container>
         <Navbar.Brand href="/">{user.username}</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -76,7 +76,7 @@ export function doRegister(user: User): MockResponse<ResponseData<User>>{
 }
 
 
-export function doGetAllPostedTwitters():  MockResponse<ResponseData<TwittersMap>>{
+export function getAllPostedTwitters(): MockResponse<ResponseData<TwittersMap>>{
   try {
     let twittersExist = getTwittersFromLocalStorage()
     return new  MockResponse(200, `success`, twittersExist )
@@ -84,6 +84,7 @@ export function doGetAllPostedTwitters():  MockResponse<ResponseData<TwittersMap
     return new  MockResponse(400, `fetch all twitters failed: ${error}`, {} )
   }
 }
+
 
 
 export function doPostAdd(post: Twitter):  MockResponse<ResponseData<Twitter>>{
@@ -117,6 +118,17 @@ export const doGetPostDetail = async (id:number): Promise<ResponseData<any>>=> {
   return new Promise((resolve, reject) => {
     try {
       const res = getPostDetail(id)
+      resolve(res)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export const doGetAllPostedTwitters = async (): Promise<ResponseData<any>>=> {
+  return new Promise((resolve, reject) => {
+    try {
+      const res = getAllPostedTwitters()
       resolve(res)
     } catch (error) {
       reject(error)
