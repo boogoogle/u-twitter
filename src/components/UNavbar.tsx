@@ -1,11 +1,12 @@
 import { Button, Navbar, Nav, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import {
   actions,
 } from "@/store/features/users"
 import { setCurrentUser } from '@/utils';
+import { useEffect } from 'react';
 
 
 function UNavbar() {
@@ -21,6 +22,14 @@ function UNavbar() {
     setCurrentUser(null)
     navigate("/u/sign")
   }
+
+  useEffect(()=>{
+    if(!(user && user.username)) {
+      navigate('/u/sign')
+    } else {
+      navigate(`/${user.username}`)
+    }
+  },[user.isLogin])
 
   return (
     <Navbar bg="light" expand="lg" style={{flex: 'none'}}>

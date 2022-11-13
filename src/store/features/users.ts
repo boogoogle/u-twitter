@@ -42,6 +42,7 @@ const userRegister = createAsyncThunk('/user/doRegister', async (user:User, {dis
     } else {
         return {
             ...res.data,
+            isLogin: false,
             msg: res.msg
         } as UserState
     }
@@ -75,7 +76,6 @@ export const userSlice = createSlice ({
         builder.addCase(userRegister.fulfilled, (state, action) => {
             Object.assign(state, {
                 ...action.payload,
-                isLogin: true
             })
         })
     }

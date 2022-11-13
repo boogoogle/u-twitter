@@ -21,8 +21,8 @@ type FormValues = {
 
 const resolver: Resolver<FormValues> = async (values) => {
   return {
-    values: values.username ? values : {},
-    errors: !values.username
+    values: (values.username && values.password) ? values : {},
+    errors: (!values.username || !values.password) 
       ? {
         username: {
           type: 'required',
